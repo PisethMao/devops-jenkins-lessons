@@ -1,5 +1,21 @@
-# VS Code Remote / Server (NEVER COMMIT)
+# OS / user junk
+.*
+!.gitignore
+
+# VS Code remote
 .vscode-server/
-.vscode/
-# Local History for VS Code (NEVER COMMIT)
-.history/
+
+# Jenkins / server runtime
+.cache/
+.local/
+.config/
+.ssh/
+
+# Node / frontend
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

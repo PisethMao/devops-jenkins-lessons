@@ -1,0 +1,5 @@
+# VS Code Remote / Server (NEVER COMMIT)
+.vscode-server/
+.vscode/
+# Local History for VS Code (NEVER COMMIT)
+.history/

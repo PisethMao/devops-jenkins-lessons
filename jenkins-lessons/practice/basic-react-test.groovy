@@ -24,7 +24,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    docker build -t pisethmao/jenkins-react-pipeline .
+                    docker build -t pisethmao/jenkins-react-pipeline:${env.BUILD_NUMBER} .
                 '''
             }
         }
@@ -35,7 +35,7 @@ pipeline {
                     // some block
                     sh '''
                         echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
-                        docker push pisethmao/jenkins-react-pipeline
+                        docker push pisethmao/jenkins-react-pipeline:${env.BUILD_NUMBER}
                     ''' 
                 }
             }

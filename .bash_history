@@ -97,3 +97,4 @@ git add .
 git status
 git commit -m "adding test to the pipeline"
 git push -u origin master
+clear

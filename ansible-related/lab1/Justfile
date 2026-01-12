@@ -1,0 +1,4 @@
+#!/bin/bash
+run name:
+    echo "Running Playbook: {{name}}"
+    ansible-playbook -i inventory.ini playbooks/{{name}}.yaml

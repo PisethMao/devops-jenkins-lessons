@@ -1,0 +1,46 @@
+# 35.198.233.195 -> Worker 1
+# 34.177.80.31 -> Worker 2
+# 34.143.221.225 -> NFS Server
+---
+- name: Setup NFS Server
+  hosts: localhost
+  become: true
+  vars:
+    nfs_remote_dir: /srv/nfs_shared
+    nfs_client_ip1: 35.198.233.195
+    nfs_client_ip2: 34.177.80.31
+  tasks:
+    - name: Update APT Caches
+      apt:
+        update_cache: yes
+    - name: Install NFS Kernel Server
+      apt:
+        name: nfs-kernel-server
+        state: present
+    - name: Create Directory To Used
+      file:
+        path: "{{nfs_remote_dir}}"
+        state: directory
+        owner: nobody
+        group: nogroup
+        mode: "0777"
+    # Configuration inside /etc/exports (tell which clients can use it)
+    - name: Write Config On /etc/exports
+      # lineinfile:
+      blockinfile:
+        path: /etc/exports
+        # line: "{{nfs_remote_dir}} *(rw, sync, no_subtree_check, no_root_squash)"
+        # line: "{{nfs_remote_dir}} {{nfs_client_ip1}}(rw,sync,no_subtree_check,no_root_squash) {{nfs_client_ip2}}(rw,sync,no_subtree_check,no_root_squash)"
+        block: | 
+          {{nfs_remote_dir}} {{nfs_client_ip1}}(rw,sync,no_subtree_check,no_root_squash) 
+          {{nfs_remote_dir}} {{nfs_client_ip2}}(rw,sync,no_subtree_check,no_root_squash)
+        state: present
+        create: yes
+    - name: Apply Configuration
+      command: exportfs -ra
+    - name: Restart NFS Kernel Service
+      systemd:
+        name: nfs-kernel-server
+        enabled: true
+        state: restarted
+# ansible-playbook -i inventory.ini playbooks/nfs_server.yaml

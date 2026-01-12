@@ -1,0 +1,31 @@
+---
+- name: Run Media Service Spring Boot
+  hosts: worker2
+  become: true
+  vars:
+    image_name: "69966/springgradleimg:1.1.1"
+  tasks:
+    - name: Copy Docker Compose File From Local
+      copy:
+        src: docker-compose.yaml
+        dest: /opt/docker-compose.yaml
+    - name: Run Docker Compose Command On OPT Directory
+      command: "docker compose up -d"
+      args:
+        chdir: /opt
+    # - name: Using Docker Compose Module (V1)
+    - name: Using Docker Compose Module (V2)
+      # community.docker.docker_compose:
+      community.docker.docker_compose_v2:
+        project_name: spring-boot-media-api
+        definition:
+          services:
+            spring-media-api:
+              image: "{{image_name}}"
+              container_name: spring_cont
+              restart: always
+              volumes:
+                - "/mnt/nfs_shared/images:/app/src/main/resources/images"
+              ports:
+                - "8080:8080"
+      when: false

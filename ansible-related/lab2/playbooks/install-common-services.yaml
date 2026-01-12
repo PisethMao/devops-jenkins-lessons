@@ -1,0 +1,5 @@
+- name: Install Common Service Playbook
+  hosts: worker1, worker2
+  become: true
+  roles:
+    - role: common

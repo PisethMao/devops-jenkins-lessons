@@ -1,0 +1,16 @@
+- name: Update APT Cache
+  apt:
+    update_cache: true
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+- name: Install Fish Shell
+  apt:
+    name: fish
+    state: present
+- name: Append User To Docker Group
+  user:
+    name: user
+    groups: docker
+    append: true

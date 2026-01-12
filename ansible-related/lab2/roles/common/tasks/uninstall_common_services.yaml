@@ -1,0 +1,24 @@
+- name: Update APT Cache
+  apt:
+    update_cache: true
+- name: Uninstall Nginx
+  apt:
+    name: nginx
+    state: absent
+- name: Uninstall Docker
+  apt:
+    name: docker
+    state: absent
+- name: Uninstall Docker Compose
+  apt:
+    name: docker-compose
+    state: absent
+- name: Uninstall Fish Shell
+  apt:
+    name: fish
+    state: absent
+- name: Append User To Docker Group
+  user:
+    name: user
+    groups: docker
+    append: true

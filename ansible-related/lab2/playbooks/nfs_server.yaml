@@ -12,6 +12,9 @@
     nfs_client_ips:
       - 35.198.233.195
       - 34.177.80.31
+  # roles:
+  #   - role: common
+  #   - role: nfs-setup
   tasks:
     - name: Update APT Caches
       apt:

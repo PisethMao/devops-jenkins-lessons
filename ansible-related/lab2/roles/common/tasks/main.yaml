@@ -1,0 +1,6 @@
+---
+- name: Instal Common Services
+  import_tasks: install_common_services.yaml
+- name: Uninstal Common Services
+  import_tasks: uninstall_common_services.yaml
+  when: false

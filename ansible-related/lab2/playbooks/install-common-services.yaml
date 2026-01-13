@@ -1,7 +1,9 @@
+---
 - name: Install Common Service Playbook
   hosts: worker1, worker2
   become: true
   roles:
-    - role: common
+    # - role: common
+    - role: my_role
       vars:
         isInstall: true

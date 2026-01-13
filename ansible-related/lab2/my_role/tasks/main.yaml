@@ -1,0 +1,39 @@
+---
+# my_role/tasks/main.yaml
+- name: Copy Nginx Configuration from Template
+  template:
+    src: nginx.conf.j2 # The Jinja2 template file
+    dest: /etc/nginx/nginx.conf # Destination on the remote machine
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart Nginx
+# - name: Copy Custom index.html To The Web Server's Root Directory
+#   copy:
+#     src: index.html # File from the 'files' directory
+#     dest: /var/www/html/index.html # Destination on the remote server
+#     owner: root
+#     group: root
+#     mode: '0644'
+#   notify:
+#     - Restart Nginx
+# - name: Update APT Cache
+#   apt:
+#     update_cache: yes
+# - name: Install Nginx
+#   apt:
+#     name: "nginx={{ nginx_version }}"
+#     state: present
+# - name: Start Nginx Service
+#   service:
+#     name: "{{ nginx_service_name }}"
+#     state: started
+#     enable: true
+# - name: Configure Nginx To Listen On The Default Port
+#   lineinfile:
+#     path: "{{ nginx_install_path }}/conf/nginx.conf"
+#     regexp: '^#listen 80;'
+#     line: "listen {{ nginx_port }};"
+#   notify:
+#     - Restart Nginx

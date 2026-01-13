@@ -1,0 +1,5 @@
+---
+# my_role/vars/main.yaml
+nginx_version: "latest" # The current version of Nginx to install
+nginx_service_name: "nginx" # The name of the Nginx service
+nginx_install_path: "/usr/local/nginx" # The custom installation path

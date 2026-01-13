@@ -1,0 +1,10 @@
+---
+# my_role/meta/main.yaml
+galaxy_info:
+  author: "Piseth Mao"
+  description: "This role installs and configures Nginx web server."
+  company: "ISTAD"
+  license: "ISTAD License"
+  min_ansible_version: "2.20.1"
+dependencies:
+  - role: common # An example dependency on another role

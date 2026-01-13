@@ -1,0 +1,4 @@
+# Sample original HTTPD configuration
+Listen 80
+DocumentRoot "/var/www/html"
+ServerName localhost

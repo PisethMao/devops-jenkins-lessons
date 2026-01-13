@@ -1,0 +1,6 @@
+---
+# my_role/defaults/main.yaml
+nginx_version: "1.29.4" # Default version of Nginx to install
+nginx_service_name: "nginx" # Default service name for Nginx
+nginx_install_path: "/usr/local/nginx" # Default installation path
+nginx_port: 80 # Default port for Nginx to listen on

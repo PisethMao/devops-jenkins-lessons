@@ -1,0 +1,2 @@
+This is an example text file.
+You can add any content here that you want to deploy.

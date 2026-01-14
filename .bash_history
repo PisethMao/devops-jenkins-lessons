@@ -98,3 +98,10 @@ git status
 git commit -m "adding test to the pipeline"
 git push -u origin master
 clear
+fish
+clear
+fish
+fis
+fish
+clear
+fish

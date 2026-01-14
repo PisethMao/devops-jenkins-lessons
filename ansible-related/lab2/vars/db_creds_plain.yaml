@@ -1,0 +1,12 @@
+db_user: admin
+db_password: securepassword123
+db_host: 10.0.0.10
+db_name: my_database
+db_port: 5432
+db_type: postgresql
+db_timeout: 30
+db_ssl: true
+db_pool_size: 20
+db_backup_enabled: true
+db_backup_schedule: "0 2 * * *"
+db_replication_enabled: false

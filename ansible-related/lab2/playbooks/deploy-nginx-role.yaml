@@ -1,0 +1,5 @@
+- name: Deploy NGINX Using Role
+  hosts: worker1
+  become: true
+  roles:
+    - role: geerlingguy.nginx

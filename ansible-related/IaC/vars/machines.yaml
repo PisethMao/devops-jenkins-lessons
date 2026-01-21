@@ -1,0 +1,38 @@
+service_account_path: "/home/user/ansible-related/IaC/google-service-account.json"
+google_project_id: "molten-observer-481604-g3"
+ssh_pubkey_path: "/home/user/.ssh/id_ed25519.pub"
+machines_specs:
+  large:
+    machine_type: "e2-standard-2"
+    zone: "asia-southeast1-a"
+    disk_size: 20
+    disk_type: "pd-standard"
+  medium:
+    machine_type: "e2-medium"
+    zone: "asia-southeast1-a"
+    disk_size: 20
+    disk_type: "pd-standard"
+ubuntu_specs:
+  v22:
+    image: "projects/ubuntu-os-cloud/global/images/family/ubuntu-2204-lts"
+  v24:
+    image: "projects/ubuntu-os-cloud/global/images/family/ubuntu-2404-lts"
+machines_info:
+  - name: "master01"
+    machine_type: "{{machines_specs.large.machine_type}}"
+    image: "{{ubuntu_specs.v22.image}}"
+    zone: "{{machines_specs.large.zone}}"
+    disk_size: "{{machines_specs.large.disk_size}}"
+    disk_type: "{{machines_specs.large.disk_type}}"
+  - name: "worker01"
+    machine_type: "{{machines_specs.medium.machine_type}}"
+    image: "{{ubuntu_specs.v22.image}}"
+    zone: "{{machines_specs.medium.zone}}"
+    disk_size: "{{machines_specs.medium.disk_size}}"
+    disk_type: "{{machines_specs.medium.disk_type}}"
+  - name: "worker02"
+    machine_type: "{{machines_specs.medium.machine_type}}"
+    image: "{{ubuntu_specs.v22.image}}"
+    zone: "{{machines_specs.medium.zone}}"
+    disk_size: "{{machines_specs.medium.disk_size}}"
+    disk_type: "{{machines_specs.medium.disk_type}}"

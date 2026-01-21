@@ -131,3 +131,7 @@ docker ps
 clear
 fish
 source /home/user/.venvs/ansible-tools/bin/activate
+clear
+fish
+source /home/user/.venvs/ansible-tools/bin/activate
+fish

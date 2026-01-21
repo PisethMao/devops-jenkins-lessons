@@ -9,4 +9,5 @@ nfs-client:
     ansible-playbook -i inventory.ini playbooks/nfs-client.yaml
 run-spring-compose:
     echo "Run Spring Docker Compose...! 😀"
+    echo "Test update this line to add for resolve conflict code!!!"
     ansible-playbook -i inventory.ini playbooks/run_spring_compose.yaml

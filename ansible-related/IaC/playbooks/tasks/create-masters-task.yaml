@@ -1,0 +1,8 @@
+- name: Create Master Machines
+  hosts: localhost
+  var_files:
+    - ../vars/machines.yaml
+  block:
+    - name: Debug Variable Inside machine.yaml
+      debug:
+        msg: "{{ ssh_pubkey_path }}"

@@ -1,0 +1,9 @@
+services:
+  spring-media-service:
+    image: 69966/springgradleimg:1.1.1
+    container_name: spring_cont_4
+    ports:
+      - 8083:8080
+    volumes:
+      - "/mnt/nfs_shared/images4:/app/src/main/resources/images"
+  

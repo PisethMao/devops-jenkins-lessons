@@ -1,0 +1,4 @@
+create:
+    ansible-playbook -i inventory.ini playbooks/create-gcp-instance.yml
+destroy:
+    ansible-playbook -i inventory.ini playbooks/destroy-gcp-instance.yml

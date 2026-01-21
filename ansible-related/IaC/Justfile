@@ -1,0 +1,4 @@
+#!/bin/bash
+create-instance:
+    echo "Create First Google instance with SSH public key"
+    ansible-playbook playbooks/create-gcp-instance.yaml

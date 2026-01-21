@@ -1,0 +1,41 @@
+- name: Create A Single GCP Instance
+  hosts: localhost
+  become: yes
+  vars:
+    ssh_public_path: "/home/user/.ssh/id_ed25519.pub"
+    machine_nam: "first-demo"
+    project_id: ""
+    service_account_path: "../credentials/serviceaccount.json"
+    adc_file: ""
+  tasks:
+    - name: Update APT Cache
+      apt:
+        update_cache: yes
+    - name: Slurping The Public Key And Store In Variables
+      slurp:
+        src: "{{ssh_public_path}}"
+      register:
+        
+    - name: Create GCP instance
+      google.cloud.gcp_compute_instance:
+        name: "{{ instance_name }}"
+        machine_type: "{{ machine_type }}"
+        zone: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        auth_kind: serviceaccount
+        service_account_file: "{{ gcp_service_account_file }}"
+        disks:
+          - auto_delete: true
+            boot: true
+            initialize_params:
+              source_image: "{{ source_image }}"
+        network_interfaces:
+          - network: default
+            access_configs:
+              - name: External NAT
+                type: ONE_TO_ONE_NAT
+      register: instance
+
+    - name: Output instance details
+      debug:
+        var: instance

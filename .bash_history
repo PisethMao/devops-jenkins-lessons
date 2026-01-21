@@ -114,3 +114,19 @@ chmod 700 ~/.ssh
 claer
 clear
 fish
+source /home/user/.venvs/ansible-tools/bin/activate
+fish
+source /home/user/.venvs/ansible-tools/bin/activate
+clear
+deactivate
+clear
+source /home/user/.venvs/ansible-tools/bin/activate
+cleawr
+cldar
+clear
+more /etc/exports
+clar
+clear
+docker ps
+clear
+fish

@@ -1,0 +1,17 @@
+- name: Destroy GCP Instance
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Delete GCP instance
+      google.cloud.gcp_compute_instance:
+        name: "{{ instance_name }}"
+        zone: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        auth_kind: serviceaccount
+        service_account_file: "{{ gcp_service_account_file }}"
+        state: absent
+      register: delete_instance
+
+    - name: Output deletion details
+      debug:
+        var: delete_instance

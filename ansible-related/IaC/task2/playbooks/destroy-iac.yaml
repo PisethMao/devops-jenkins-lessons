@@ -1,0 +1,14 @@
+---
+- name: Destroy Infrastructure
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - "{{ playbook_dir }}/../vars/machines.yaml"
+  tasks:
+    - name: Destroy all GCP instances
+      include_tasks: "{{ playbook_dir }}/tasks/destroy-instances-task.yaml"
+    - name: Remove generated inventory file
+      file:
+        path: "{{ playbook_dir }}/../inventory.ini"
+        state: absent

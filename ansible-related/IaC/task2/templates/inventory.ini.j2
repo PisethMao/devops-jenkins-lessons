@@ -1,0 +1,16 @@
+[all:vars]
+ansible_user={{ agent_user | default('user') }}
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+[local]
+localhost ansible_connection=local
+[masters]
+{% for h in (groups['masters'] | default([]) | sort) %}
+{{ h }} ansible_host={{ hostvars[h].ansible_host }} internal_ip={{ hostvars[h].internal_ip }}
+{% endfor %}
+[workers]
+{% for h in (groups['workers'] | default([]) | sort) %}
+{{ h }} ansible_host={{ hostvars[h].ansible_host }} internal_ip={{ hostvars[h].internal_ip }}
+{% endfor %}
+[all:children]
+masters
+workers

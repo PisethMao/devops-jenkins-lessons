@@ -1,0 +1,23 @@
+---
+- name: Destroy Plan
+  ansible.builtin.debug:
+    msg: "Deleting {{ item.name }} in zone {{ item.zone }}"
+  loop: "{{ machines_info }}"
+  when:
+    - item.name is defined
+    - item.zone is defined
+- name: Destroy GCP Instances
+  google.cloud.gcp_compute_instance:
+    name: "{{ item.name }}"
+    zone: "{{ item.zone }}"
+    project: "{{ google_project_id }}"
+    auth_kind: application
+    state: absent
+  loop: "{{ machines_info }}"
+  when:
+    - item.name is defined
+    - item.zone is defined
+  ignore_errors: true
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: "{{ adc_file }}"
+    GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES: "1"

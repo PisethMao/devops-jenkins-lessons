@@ -1,0 +1,11 @@
+# Secrets / credentials
+credentials/
+**/application_default_credentials.json
+*.json
+ansible-related/IaC/task2/credentials/application_default_credentials.json
+
+# Ansible secrets
+*.pem
+*.key
+*.p12
+*.pfx

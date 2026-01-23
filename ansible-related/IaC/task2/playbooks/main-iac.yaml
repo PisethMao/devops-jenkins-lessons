@@ -1,0 +1,67 @@
+---
+- name: Create VMs And Build Dynamic Inventory
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - "{{ playbook_dir }}/../vars/machines.yaml"
+  tasks:
+    - name: Create Masters Machines
+      include_tasks: "{{ playbook_dir }}/tasks/create-masters-task.yaml"
+    - name: Create Workers Machines
+      include_tasks: "{{ playbook_dir }}/tasks/create-workers-task.yaml"
+    - name: Debug in-memory groups before writing inventory.ini
+      debug:
+        msg: "masters={{ groups['masters'] | default([]) }}, workers={{ groups['workers'] | default([]) }}"
+    - name: Write inventory.ini from template
+      template:
+        src: "{{ playbook_dir }}/../templates/inventory.ini.j2"
+        dest: "{{ playbook_dir }}/../inventory.ini"
+    - name: Refresh inventory after writing inventory.ini
+      meta: refresh_inventory
+- name: Wait Until All Servers Are Reachable By SSH (From Jenkins)
+  hosts: masters:workers
+  gather_facts: false
+  tasks:
+    - name: Wait for SSH
+      wait_for_connection:
+        timeout: 300
+- name: Copy Jenkins SSH Keypair To Master01 (LAB ONLY)
+  hosts: master01
+  gather_facts: false
+  become: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/machines.yaml"
+  tasks:
+    - name: Ensure /home/user/.ssh exists
+      file:
+        path: /home/user/.ssh
+        state: directory
+        owner: user
+        group: user
+        mode: "0700"
+    - name: Copy Jenkins private key to master01
+      copy:
+        src: "{{ ssh_privkey_path }}"
+        dest: /home/user/.ssh/id_ed25519
+        owner: user
+        group: user
+        mode: "0600"
+    - name: Copy Jenkins public key to master01
+      copy:
+        src: "{{ ssh_pubkey_path }}"
+        dest: /home/user/.ssh/id_ed25519.pub
+        owner: user
+        group: user
+        mode: "0644"
+- name: Configure Master01 SSH Aliases (ssh master02, ssh worker03, etc.)
+  hosts: master01
+  gather_facts: false
+  become: true
+  become_user: user
+  tasks:
+    - name: Write SSH config with aliases (use internal IP)
+      template:
+        src: "{{ playbook_dir }}/../templates/master01_ssh_config.j2"
+        dest: /home/user/.ssh/config
+        mode: "0600"

@@ -1,0 +1,76 @@
+- name: Ensure SSH Public Key Exists On Jenkins Server
+  ansible.builtin.stat:
+    path: "{{ ssh_pubkey_path }}"
+  register: ssh_pubkey_stat
+- name: Generate SSH Keypair If Missing (On Jenkins Server)
+  ansible.builtin.command: ssh-keygen -t ed25519 -f "{{ ssh_privkey_path }}" -N ""
+  args:
+    creates: "{{ ssh_privkey_path }}"
+  when: not ssh_pubkey_stat.stat.exists
+- name: Slurp SSH Public Key From Jenkins Server
+  ansible.builtin.slurp:
+    src: "{{ ssh_pubkey_path }}"
+  register: ssh_pubkey
+- name: Create GCP Worker Instances
+  google.cloud.gcp_compute_instance:
+    name: "{{ item.name }}"
+    machine_type: "{{ item.machine_type }}"
+    zone: "{{ item.zone }}"
+    project: "{{ google_project_id }}"
+    auth_kind: application
+    state: present
+    metadata:
+      ssh-keys: "{{ agent_user }}:{{ ssh_pubkey['content'] | b64decode }}"
+    disks:
+      - auto_delete: true
+        boot: true
+        initialize_params:
+          source_image: "{{ item.image }}"
+          disk_size_gb: "{{ item.disk_size }}"
+          disk_type: "{{ item.disk_type }}"
+    network_interfaces:
+      - network:
+          selfLink: "projects/{{ google_project_id }}/global/networks/default"
+        access_configs:
+          - name: External NAT
+            type: ONE_TO_ONE_NAT
+    tags:
+      items: [http-server, https-server]
+  loop: "{{ machines_info }}"
+  when: item.name in ["worker03", "worker04"]
+  register: gcp_workers
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: "{{ adc_file }}"
+    GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES: "1"
+- name: Query Worker Instance Info (Authoritative)
+  google.cloud.gcp_compute_instance_info:
+    project: "{{ google_project_id }}"
+    zone: "{{ item.zone }}"
+    filters:
+      - "name = {{ item.name }}"
+    auth_kind: application
+  loop: "{{ machines_info }}"
+  when: item.name in ["worker03", "worker04"]
+  register: worker_info
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: "{{ adc_file }}"
+    GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES: "1"
+- name: Add Workers To Tn-Memory Inventory (From Instance_Info)
+  ansible.builtin.add_host:
+    name: "{{ inst.name }}"
+    groups: workers
+    ansible_host: "{{ inst.networkInterfaces[0].accessConfigs[0].natIP }}"
+    internal_ip: "{{ inst.networkInterfaces[0].networkIP }}"
+    ansible_user: "{{ agent_user }}"
+    ansible_ssh_private_key_file: "{{ ssh_privkey_path }}"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+  vars:
+    inst: "{{ item.resources[0] }}"
+  loop: "{{ worker_info.results }}"
+  when:
+    - item.resources is defined
+    - item.resources | length > 0
+    - item.resources[0].networkInterfaces is defined
+    - item.resources[0].networkInterfaces | length > 0
+    - item.resources[0].networkInterfaces[0].accessConfigs is defined
+    - item.resources[0].networkInterfaces[0].accessConfigs | length > 0

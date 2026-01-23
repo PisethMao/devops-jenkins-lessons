@@ -1,0 +1,8 @@
+setup-IaC:
+    echo "Setup Infrastructure...!"
+    rm -f {{justfile_directory()}}/inventory.ini
+    ansible-playbook playbooks/main-iac.yaml
+    ansible -i {{justfile_directory()}}/inventory.ini all -m ping
+destroy:
+    echo "Desroy the whole infrastructure...!"
+    ansible-playbook playbooks/destroy-iac.yaml

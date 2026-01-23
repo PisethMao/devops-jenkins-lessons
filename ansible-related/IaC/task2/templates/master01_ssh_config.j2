@@ -1,0 +1,20 @@
+{% set ssh_user = (agent_user | default(ansible_user) | default('user')) %}
+{% set key_path = '/home/' ~ ssh_user ~ '/.ssh/id_ed25519' %}
+{% for h in (groups['masters'] | default([]) | sort) if h != 'master01' %}
+Host {{ h }}
+  HostName {{ hostvars[h].internal_ip | default(hostvars[h].ansible_host) }}
+  User {{ ssh_user }}
+  IdentityFile {{ key_path }}
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+{% endfor %}
+{% for h in (groups['workers'] | default([]) | sort) %}
+Host {{ h }}
+  HostName {{ hostvars[h].internal_ip | default(hostvars[h].ansible_host) }}
+  User {{ ssh_user }}
+  IdentityFile {{ key_path }}
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+{% endfor %}

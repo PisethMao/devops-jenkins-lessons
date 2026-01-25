@@ -144,3 +144,4 @@ fish
 source /home/user/.venvs/ansible-tools/bin/activate
 fish
 source /home/user/.venvs/ansible-tools/bin/activate
+fish

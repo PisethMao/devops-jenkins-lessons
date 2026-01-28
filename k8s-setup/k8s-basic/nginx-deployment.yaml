@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-dpl
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx-dpl
+  template:
+    metadata:
+      labels:
+        app: nginx-dpl
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:stable-alpine3.23-slim
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
